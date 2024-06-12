@@ -1,0 +1,12 @@
+[Unit]
+Description=2K1000LA Monitor + 3-Port USB 2.0 Hub Cape Display Service
+After=network.target
+
+[Service]
+User=root
+ExecStartPre=/bin/sleep 3
+ExecStart=/usr/local/bin/monitor -config /usr/local/etc/monitor/config.json
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
