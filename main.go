@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/bclswl0827/2k1000la-cape/monitor"
@@ -65,10 +66,17 @@ func main() {
 
 	// Attach system signal handler
 	sig := make(chan os.Signal, 1)
-	signal.Notify(sig, os.Interrupt)
+	signal.Notify(
+		sig,
+		os.Interrupt,
+		syscall.SIGHUP,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT,
+	)
 
 	// Create timer to display IP addresses
-	ticker := time.NewTicker(time.Second * 3)
+	ticker := time.NewTicker(time.Second * 2)
 	defer ticker.Stop()
 
 	for {
