@@ -1,0 +1,10 @@
+{
+    "monitor_settings": {
+        "device": "/dev/ttyUSB0",
+        "baudrate": 9600
+    },
+    "ipnet_settings": {
+        "pattern": "wlo*",
+        "fuzzy": true
+    }
+}
