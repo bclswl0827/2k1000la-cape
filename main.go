@@ -30,13 +30,6 @@ func main() {
 	}
 	log.Println("config file has been loaded")
 
-	// Check if the interface exists
-	ifName, err := getInterfaceByPattern(conf.IpNet.Pattern, conf.IpNet.Fuzzy)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	log.Printf("specified interface found: %s\n", ifName)
-
 	// Open serial port
 	monitorPort, err := serial.Open(conf.Monitor.Device, conf.Monitor.Baudrate)
 	if err != nil {
@@ -102,6 +95,15 @@ func main() {
 				monitorDriver.Display(monitorDependency, "Failed to get\nIPv4 addresses.", 0, 0)
 				continue
 			}
+
+			ifName, err := getInterfaceByPattern(conf.IpNet.Pattern, conf.IpNet.Fuzzy)
+			if err != nil {
+				log.Println(err)
+				monitorDependency.State.Error = true
+				monitorDriver.Display(monitorDependency, "Failed to get\ninterface name.", 0, 0)
+				continue
+			}
+			log.Printf("specified interface pattern matches: %s\n", ifName)
 
 			ip, ok := ipMap[ifName]
 			if !ok {
