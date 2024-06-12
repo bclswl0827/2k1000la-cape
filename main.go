@@ -68,7 +68,7 @@ func main() {
 	signal.Notify(sig, os.Interrupt)
 
 	// Create timer to display IP addresses
-	ticker := time.NewTicker(time.Second)
+	ticker := time.NewTicker(time.Second * 3)
 	defer ticker.Stop()
 
 	for {
