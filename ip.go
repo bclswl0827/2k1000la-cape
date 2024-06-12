@@ -14,8 +14,8 @@ func getIPv4Addrs() (map[string]string, error) {
 	}
 
 	ipv4Addresses := make(map[string]string)
-	for _, inter := range interfaces {
-		addrs, err := inter.Addrs()
+	for _, iface := range interfaces {
+		addrs, err := iface.Addrs()
 		if err != nil {
 			continue
 		}
@@ -23,7 +23,7 @@ func getIPv4Addrs() (map[string]string, error) {
 		for _, address := range addrs {
 			ipNet, ok := address.(*net.IPNet)
 			if ok && ipNet.IP.To4() != nil && len(ipNet.IP.String()) > 0 && !ipNet.IP.IsLoopback() {
-				ipv4Addresses[inter.Name] = ipNet.IP.String()
+				ipv4Addresses[iface.Name] = ipNet.IP.String()
 			}
 		}
 	}
@@ -42,6 +42,14 @@ func getInterfaceByPattern(pattern string, fuzzy bool) (string, error) {
 	}
 
 	for _, iface := range interfaces {
+		addrs, err := iface.Addrs()
+		if err != nil {
+			continue
+		}
+		if len(addrs) == 0 {
+			continue
+		}
+
 		if fuzzy {
 			r := regexp.MustCompile(pattern)
 			if r.MatchString(iface.Name) {
