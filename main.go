@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/bclswl0827/openstation-monitor/monitor"
-	"github.com/bclswl0827/openstation-monitor/serial"
+	"github.com/bclswl0827/2k1000la-cape/monitor"
+	"github.com/bclswl0827/2k1000la-cape/serial"
 )
 
 func parseCommandLine(args *arguments) {

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bclswl0827/openstation-monitor/serial"
+	"github.com/bclswl0827/2k1000la-cape/serial"
 )
 
 const (

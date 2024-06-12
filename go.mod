@@ -1,4 +1,4 @@
-module github.com/bclswl0827/openstation-monitor
+module github.com/bclswl0827/2k1000la-cape
 
 go 1.21.5
 
