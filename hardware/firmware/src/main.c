@@ -180,6 +180,6 @@ void loop() {
             }
         }
 
-        ping_routine(has_data ? 50 : 150);
+        ping_routine(has_data ? 30 : 150);
     }
 }
