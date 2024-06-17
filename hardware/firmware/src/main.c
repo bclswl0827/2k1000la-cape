@@ -15,6 +15,7 @@
 #define PRINT_CMD 0x01
 #define RESET_CMD 0x02
 #define VERNO_CMD 0x03
+#define PERSIST_CMD 0x04
 
 #define LED_POWER 25
 #define LED_PING 24
@@ -89,10 +90,15 @@ void setup() {
 }
 
 void loop() {
+    uint8_t timeout_enable = 1;
+    uint8_t has_timeout_msg = 0;
+    uint32_t timeout_count = UINT16_MAX;
+
     while (1) {
         uint8_t has_data = Serial_available();
         if (has_data && Serial_read() == SYNC_WORD) {
             uint8_t cmd = Serial_read();
+
             if (cmd == RESET_CMD) {
                 uint8_t recv_checksum = Serial_read();
                 uint8_t calc_checksum = get_checksum(2, SYNC_WORD, cmd);
@@ -136,11 +142,44 @@ void loop() {
                 } else {
                     Serial_write(NACK_WORD);
                 }
+            } else if (cmd == PERSIST_CMD) {
+                uint8_t persist_val = Serial_read();
+                uint8_t recv_checksum = Serial_read();
+                uint8_t calc_checksum = get_checksum(2, SYNC_WORD, cmd);
+                if (calc_checksum == recv_checksum) {
+                    timeout_enable = !persist_val;
+                    Serial_write(ACK_WORD);
+                } else {
+                    Serial_write(NACK_WORD);
+                }
             } else {
                 Serial_write(NACK_WORD);
             }
+
+            if (timeout_enable) {
+                has_timeout_msg = 0;
+                timeout_count = UINT16_MAX;
+            }
         }
 
-        ping_routine(has_data ? 15 : 80);
+        if (timeout_enable) {
+            timeout_count--;
+
+            if (!timeout_count && !has_timeout_msg) {
+                LCD1602Clear();
+
+                LCD1602GotoXY(0, 0);
+                LCD1602Print("Time-out due to");
+
+                LCD1602GotoXY(0, 1);
+                LCD1602Print("no data received");
+
+                setup_led(0x02);
+                has_timeout_msg = 1;
+                timeout_count = UINT16_MAX;
+            }
+        }
+
+        ping_routine(has_data ? 50 : 150);
     }
 }
