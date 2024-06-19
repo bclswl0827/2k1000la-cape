@@ -69,7 +69,7 @@ func main() {
 	)
 
 	// Create timer to display IP addresses
-	ticker := time.NewTicker(time.Second * 2)
+	ticker := time.NewTicker(time.Second * 5)
 	defer ticker.Stop()
 
 	for {
