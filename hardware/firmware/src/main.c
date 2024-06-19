@@ -92,7 +92,7 @@ void setup() {
 void loop() {
     uint8_t timeout_enable = 1;
     uint8_t has_timeout_msg = 0;
-    uint32_t timeout_count = UINT16_MAX;
+    uint32_t timeout_count = UINT16_MAX * 14;
 
     while (1) {
         uint8_t has_data = Serial_available();
