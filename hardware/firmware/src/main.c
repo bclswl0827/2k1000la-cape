@@ -4,7 +4,8 @@
 #include "modules/lcd1602.h"
 #include "modules/version.h"
 
-#define START_SCREEN "Device Started!"
+#define START_SCREEN "OpenStation..."
+#define TIMEOUT_THRESHOLD (UINT16_MAX * 14)
 
 #define SYNC_WORD 0xFF
 #define ACK_WORD 0xEE
@@ -92,7 +93,7 @@ void setup() {
 void loop() {
     uint8_t timeout_enable = 1;
     uint8_t has_timeout_msg = 0;
-    uint32_t timeout_count = UINT16_MAX * 14;
+    uint32_t timeout_count = TIMEOUT_THRESHOLD;
 
     while (1) {
         uint8_t has_data = Serial_available();
@@ -158,8 +159,9 @@ void loop() {
 
             if (timeout_enable) {
                 has_timeout_msg = 0;
-                timeout_count = UINT16_MAX;
             }
+
+            timeout_count = TIMEOUT_THRESHOLD;
         }
 
         if (timeout_enable) {
@@ -176,7 +178,7 @@ void loop() {
 
                 setup_led(0x02);
                 has_timeout_msg = 1;
-                timeout_count = UINT16_MAX;
+                timeout_count = TIMEOUT_THRESHOLD;
             }
         }
 
